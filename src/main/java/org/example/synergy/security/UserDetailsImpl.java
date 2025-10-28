@@ -49,7 +49,7 @@ public class UserDetailsImpl implements UserDetails {
     
     private final List<GrantedAuthority> authorities;
     
-    private  Integer userType;
+    private Integer userType;
     
     public UserDetailsImpl(User user) {
         this.id = user.getId();
@@ -60,6 +60,7 @@ public class UserDetailsImpl implements UserDetails {
         this.fullName = user.getFullName();
         this.phoneNumber = user.getPhoneNumber();
         this.status = user.getStatus();
+        this.userType = user.getType();
         this.authorities = UserType.ADMIN.getValue() == userType
                 ? List.of(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN)) : new ArrayList<>();
     }

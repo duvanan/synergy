@@ -47,4 +47,19 @@ public class User extends AbstractAuditing {
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;
 
+    @Column(name = "job_title_id")
+    private Long jobTitleId;
+
+    @Column(name = "department_id")
+    private Long departmentId;
+
+    @Column(name = "failed_otp_attempts")
+    private Integer failedOtpAttempts = 0;
+
+    @Column(name = "jti", length = 100, unique = true)
+    private String jti;
+
+    @Column(name = "`type`", nullable = false)
+    private Integer type;
+
 }

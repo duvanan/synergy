@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * Properties specific to Rfias.
@@ -23,6 +24,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @RequiredArgsConstructor
 @ConfigurationProperties(prefix = "application.security.authentication.jwt")
+@Component
 public class JwtProperties {
     
     private String secretKey;

@@ -6,33 +6,45 @@
  * Unauthorized use, disclosure, reproduction, or distribution is strictly prohibited and may be unlawful.
  * Permission for any use must be obtained in writing from RFIAS.
  */
-package org.example.synergy.dto.request.loginhistory;
+package org.example.synergy.dto.response.auth;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.synergy.contants.enums.LoginStatus;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class LoginHistoryDTO implements Serializable {
+public class AuthenticationDTO implements Serializable {
     
     @Serial
-    private static final long serialVersionUID = 6421224175916755097L;
+    private static final long serialVersionUID = 5143605167552195129L;
+    
+    private Long id;
+    
+    private String code;
     
     private String username;
     
-    private Long userId;
+    private String fullName;
     
-    private LoginStatus status;
+    private String email;
     
-    private String errorCode;
+    private String phoneNumber;
     
-    private String errorMessage;
+    private Boolean isAssign;
+    
+    private String regionCode;
+    
+    private Integer userType;
+    
+    private String accessToken;
+    
+    private String refreshToken;
+    
+    private List<String> permissions;
 }

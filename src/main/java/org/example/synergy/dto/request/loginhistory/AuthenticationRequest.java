@@ -10,35 +10,25 @@ package org.example.synergy.dto.request.loginhistory;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
-
-import com.viettel.vtit.rfias.model.dto.PaginationInfo;
+import jakarta.validation.constraints.NotBlank;
 
 @Data
-@AllArgsConstructor
+@Builder
 @NoArgsConstructor
-@SuperBuilder
-public class LoginHistorySearchCondition implements Serializable {
+@AllArgsConstructor
+public class AuthenticationRequest implements Serializable {
     
     @Serial
-    private static final long serialVersionUID = 678144304932442711L;
+    private static final long serialVersionUID = 3685822297114080842L;
     
+    @NotBlank
     private String username;
     
-    private String ipAddress;
-    
-    private List<String> status;
-    
-    private String fromDate;
-    
-    private String toDate;
-    
-    private String collate;
-    
-    private PaginationInfo paginationInfo;
+    @NotBlank
+    private String password;
 }

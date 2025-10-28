@@ -18,6 +18,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.example.synergy.contants.Constants;
+import org.example.synergy.contants.JwtConstants;
+import org.example.synergy.util.ObjectMapperUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,10 +31,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-
-import com.viettel.vtit.rfias.constants.Constants;
-import com.viettel.vtit.rfias.constants.JwtConstants;
-import com.viettel.vtit.rfias.utils.ObjectMapperUtil;
 
 /**
  * Utility class for Spring Security.
