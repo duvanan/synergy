@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.synergy.contants.Constants;
 import org.example.synergy.exceptions.UserAccountLockedException;
 import org.example.synergy.exceptions.UserNotActivatedException;
-import org.example.synergy.model.User;
+import org.example.synergy.entity.User;
 import org.example.synergy.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

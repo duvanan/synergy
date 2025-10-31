@@ -10,7 +10,7 @@ package org.example.synergy.controller;
 
 import lombok.RequiredArgsConstructor;
 
-import org.example.synergy.dto.request.loginhistory.AuthenticationRequest;
+import org.example.synergy.dto.request.AuthenticationRequest;
 import org.example.synergy.dto.response.auth.AuthenticationDTO;
 import org.example.synergy.dto.response.auth.AuthenticationResponse;
 import org.example.synergy.service.AuthenticationService;

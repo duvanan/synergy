@@ -1,4 +1,4 @@
-package org.example.synergy.model;
+package org.example.synergy.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

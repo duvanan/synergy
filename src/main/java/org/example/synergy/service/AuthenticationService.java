@@ -8,7 +8,7 @@
  */
 package org.example.synergy.service;
 
-import org.example.synergy.dto.request.loginhistory.AuthenticationRequest;
+import org.example.synergy.dto.request.AuthenticationRequest;
 import org.example.synergy.dto.response.auth.AuthenticationDTO;
 
 public interface AuthenticationService {
