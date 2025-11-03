@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.example.synergy.contants.Constants;
 import org.example.synergy.contants.enums.UserType;
-import org.example.synergy.dto.request.loginhistory.AuthenticationRequest;
+import org.example.synergy.dto.request.AuthenticationRequest;
 import org.example.synergy.dto.response.auth.AuthenticationDTO;
 import org.example.synergy.exceptions.ExceptionTranslator;
 import org.example.synergy.repository.UserRepository;

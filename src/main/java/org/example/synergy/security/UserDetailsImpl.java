@@ -14,7 +14,7 @@ import java.util.List;
 import lombok.Data;
 
 import org.example.synergy.contants.enums.UserType;
-import org.example.synergy.model.User;
+import org.example.synergy.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
