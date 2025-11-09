@@ -23,7 +23,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Tắt CSRF nếu dùng API
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Cho phép truy cập API đăng nhập, đăng ký
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/workflows/**").permitAll() // yêu cầu login
+                        .requestMatchers("/api/document-types/**").permitAll() // yêu cầu login
                 );
 
         return http.build();

@@ -5,10 +5,18 @@ import lombok.Data;
 @Data
 public class WorkflowStepRequest {
     private Integer stepNumber;
-    private Integer subStepNumber;
-    private String departmentId;
-    private String pic;
+    private String label;
+    private String stepType;
+    private Double minValue;
+    private Double maxValue;
+    private String unit;
+    private String tooltip;
+
+    // SLA riêng cho bước
     private Integer stepMaxSla;
     private Integer stepWarningSla;
-    private String stepWarningPerson; // nhiều mã cách nhau dấu phẩy
+    private String stepWarningPerson;
+
+    private String departmentId;
+    private String pic;
 }

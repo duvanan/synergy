@@ -1,22 +1,37 @@
 package org.example.synergy.service;
 
-import org.example.synergy.entity.DocumentType;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.example.synergy.dto.request.DocumentTypeRequest;
+import org.example.synergy.dto.response.DocumentTypeResponse;
 
 import java.util.List;
 
+/**
+ * Service interface quản lý loại văn bản (DocumentType)
+ */
 public interface DocumentTypeService {
 
-    List<DocumentType> findAll();
+    /**
+     * Tạo mới loại văn bản
+     */
+    DocumentTypeResponse create(DocumentTypeRequest request);
 
-    DocumentType findById(Long id);
+    /**
+     * Cập nhật loại văn bản
+     */
+    DocumentTypeResponse update(Long id, DocumentTypeRequest request);
 
-    DocumentType save(DocumentType documentType);
-
-    DocumentType update(Long id, DocumentType updated);
-
+    /**
+     * Xóa loại văn bản theo ID
+     */
     void delete(Long id);
 
-    Page<DocumentType> search(String name, String label, Pageable pageable);
+    /**
+     * Lấy chi tiết loại văn bản theo ID
+     */
+    DocumentTypeResponse getById(Long id);
+
+    /**
+     * Lọc hoặc lấy danh sách loại văn bản theo từ khóa, mã, tên
+     */
+    List<DocumentTypeResponse> filter(String keyword, String code);
 }

@@ -69,7 +69,7 @@ public class NotificationConfigServiceImpl implements NotificationConfigService 
 
     private NotificationConfigResponse toResponse(NotificationConfig config) {
         String documentTypeName = documentTypeRepository.findById(config.getDocumentTypeId())
-                .map(DocumentType::getDocumentTypeName)
+                .map(DocumentType::getName)
                 .orElse("");
         return NotificationConfigResponse.builder()
                 .id(config.getId())

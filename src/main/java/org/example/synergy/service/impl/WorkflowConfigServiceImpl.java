@@ -8,6 +8,8 @@ import org.example.synergy.entity.WorkflowStep;
 import org.example.synergy.repository.WorkflowConfigRepository;
 import org.example.synergy.repository.WorkflowStepRepository;
 import org.example.synergy.service.WorkflowConfigService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +29,8 @@ public class WorkflowConfigServiceImpl implements WorkflowConfigService {
 
     @Override
     public WorkflowConfig findById(Long id) {
-        return configRepo.findById(id).orElseThrow(() -> new RuntimeException("Workflow not found"));
+        return configRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Workflow config not found"));
     }
 
     @Override
@@ -35,7 +38,7 @@ public class WorkflowConfigServiceImpl implements WorkflowConfigService {
     public WorkflowConfig save(WorkflowConfigRequest req) {
         WorkflowConfig cfg = toEntity(req);
         WorkflowConfig saved = configRepo.save(cfg);
-        saveSteps(saved.getId(), req.getSteps());
+        saveSteps(saved, req.getSteps());
         return saved;
     }
 
@@ -47,7 +50,7 @@ public class WorkflowConfigServiceImpl implements WorkflowConfigService {
         WorkflowConfig updated = configRepo.save(existing);
 
         stepRepo.deleteByWorkflowConfigId(id);
-        saveSteps(id, req.getSteps());
+        saveSteps(updated, req.getSteps());
         return updated;
     }
 
@@ -63,20 +66,24 @@ public class WorkflowConfigServiceImpl implements WorkflowConfigService {
         return stepRepo.findByWorkflowConfigId(configId);
     }
 
-    // ---------------------
-    private void saveSteps(Long configId, List<WorkflowStepRequest> requests) {
+    private void saveSteps(WorkflowConfig config, List<WorkflowStepRequest> requests) {
         if (requests == null || requests.isEmpty()) return;
 
         List<WorkflowStep> steps = requests.stream().map(r -> {
             WorkflowStep s = new WorkflowStep();
-            s.setWorkflowConfigId(configId);
+            s.setWorkflowConfig(config);
             s.setStepNumber(r.getStepNumber());
-            s.setSubStepNumber(r.getSubStepNumber());
-            s.setDepartmentId(r.getDepartmentId());
-            s.setPic(r.getPic());
+            s.setLabel(r.getLabel());
+            s.setStepType(r.getStepType());
+            s.setMinValue(r.getMinValue());
+            s.setMaxValue(r.getMaxValue());
+            s.setUnit(r.getUnit());
+            s.setTooltip(r.getTooltip());
             s.setStepMaxSla(r.getStepMaxSla());
             s.setStepWarningSla(r.getStepWarningSla());
             s.setStepWarningPerson(r.getStepWarningPerson());
+            s.setDepartmentId(r.getDepartmentId());
+            s.setPic(r.getPic());
             return s;
         }).toList();
 
@@ -86,19 +93,20 @@ public class WorkflowConfigServiceImpl implements WorkflowConfigService {
     private WorkflowConfig toEntity(WorkflowConfigRequest req) {
         WorkflowConfig c = new WorkflowConfig();
         if (req.getId() != null) c.setId(req.getId());
-        c.setDocumentTypeId(req.getDocumentTypeId());
-        c.setMaxSla(req.getMaxSla());
-        c.setWarningSla(req.getWarningSla());
-        c.setWarningPerson(req.getWarningPerson());
-        c.setDescription(req.getDescription());
+        updateEntity(c, req);
         return c;
     }
 
     private void updateEntity(WorkflowConfig existing, WorkflowConfigRequest req) {
+        existing.setName(req.getName());
         existing.setDocumentTypeId(req.getDocumentTypeId());
+        existing.setDescription(req.getDescription());
         existing.setMaxSla(req.getMaxSla());
         existing.setWarningSla(req.getWarningSla());
         existing.setWarningPerson(req.getWarningPerson());
-        existing.setDescription(req.getDescription());
+    }
+
+    public Page<WorkflowConfig> filterWorkflowConfigs(String name, Long documentTypeId, Integer maxSla, Pageable pageable) {
+        return configRepo.findAll(WorkflowConfigSpecification.filter(name, documentTypeId, maxSla), pageable);
     }
 }
