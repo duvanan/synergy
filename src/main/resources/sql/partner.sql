@@ -13,6 +13,10 @@ CREATE TABLE partner (
                          legal_representative_address VARCHAR(255) COMMENT 'Địa chỉ người đại diện pháp luật',
                          legal_representative_phone VARCHAR(50) COMMENT 'SĐT người đại diện pháp luật',
                          connected BOOLEAN DEFAULT TRUE COMMENT 'Trạng thái kết nối: true=còn, false=ngắt',
-                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    -- Thông tin audit kế thừa từ BaseAuthorEntity
+                         is_deleted BOOLEAN DEFAULT FALSE COMMENT 'Đã xóa logic hay chưa',
+                         created_by VARCHAR(100) NULL COMMENT 'Người tạo',
+                         created_date DATETIME NULL COMMENT 'Ngày tạo',
+                         updated_user VARCHAR(100) NULL COMMENT 'Người cập nhật',
+                         updated_date DATETIME NULL COMMENT 'Ngày cập nhật'
 );
