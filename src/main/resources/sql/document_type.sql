@@ -1,7 +1,7 @@
 CREATE TABLE document_type (
                                id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT 'Khóa chính',
-                               name VARCHAR(255) NOT NULL COMMENT 'Tên loại văn bản',
-                               code VARCHAR(100) NOT NULL UNIQUE COMMENT 'Mã loại văn bản',
+                               name VARCHAR(255)  COMMENT 'Tên loại văn bản',
+                               code VARCHAR(100)   COMMENT 'Mã loại văn bản',
                                description TEXT NULL COMMENT 'Mô tả loại văn bản',
                                template_file_path VARCHAR(500) NULL COMMENT 'Tên hoặc đường dẫn file biểu mẫu',
     -- Thông tin audit kế thừa từ BaseAuthorEntity
