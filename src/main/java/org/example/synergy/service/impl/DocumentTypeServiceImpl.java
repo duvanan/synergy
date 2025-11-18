@@ -64,19 +64,30 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
     public List<DocumentTypeResponse> filter(String keyword, String code) {
         List<DocumentType> list = repository.findAll((root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
+
             if (keyword != null && !keyword.isEmpty()) {
                 Predicate p1 = cb.like(root.get("name"), "%" + keyword + "%");
                 Predicate p2 = cb.like(root.get("description"), "%" + keyword + "%");
                 predicates.add(cb.or(p1, p2));
             }
+
             if (code != null && !code.isEmpty()) {
                 predicates.add(cb.like(root.get("code"), "%" + code + "%"));
             }
+
+            // ⛔ Nếu không có điều kiện, return null -> trả full danh sách
+            if (predicates.isEmpty()) {
+                return null;
+            }
+
             return cb.and(predicates.toArray(new Predicate[0]));
         });
 
-        return list.stream().map(this::mapToResponse).collect(Collectors.toList());
+        return list.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
+
 
     // ======================= MAPPING =======================
 
