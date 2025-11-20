@@ -1,6 +1,6 @@
 package org.example.synergy.repository;
 
-import org.example.synergy.model.User;
+import org.example.synergy.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

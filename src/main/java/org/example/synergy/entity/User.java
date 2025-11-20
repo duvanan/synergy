@@ -6,7 +6,7 @@
  * Unauthorized use, disclosure, reproduction, or distribution is strictly prohibited and may be unlawful.
  * Permission for any use must be obtained in writing from RFIAS.
  */
-package org.example.synergy.model;
+package org.example.synergy.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ColumnResult;
@@ -52,56 +52,56 @@ import java.time.Instant;
     })
 })
 public class User extends AbstractAuditingEntity implements Serializable {
-    
+
     @Serial
     private static final long serialVersionUID = 787005999925410388L;
-    
+
     @Id
     @Column(name = "id", unique = true, updatable = false)
     private Long id;
-    
+
     @Column(name = "`code`", length = 30)
     private String code;
-    
+
     @Column(name = "full_name")
     private String fullName;
-    
+
     @Column(name = "email")
     private String email;
-    
+
     @Column(name = "password")
     private String password;
-    
+
     @Column(name = "failed_password_attempts")
     private Integer failedPasswordAttempts = 0;
-    
+
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
-    
+
     @Column(name = "job_title_id")
     private Long jobTitleId;
-    
+
     @Column(name = "department_id")
     private Long departmentId;
-    
+
     @Column(name = "otp_expired")
     private Instant otpExpired;
-    
+
     @Column(name = "failed_otp_attempts")
     private Integer failedOtpAttempts = 0;
-    
+
     @Column(name = "jti", length = 100, unique = true)
     private String jti;
-    
+
     @Column(name = "status")
     private Boolean status;
-    
+
     @Column(name = "is_assign")
     private Boolean isAssign;
-    
+
     @Column(name = "is_deleted")
     private Boolean isDeleted;
-    
+
     @Column(name = "`type`")
     private Integer type;
 

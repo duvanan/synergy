@@ -6,7 +6,7 @@
  * Unauthorized use, disclosure, reproduction, or distribution is strictly prohibited and may be unlawful.
  * Permission for any use must be obtained in writing from RFIAS.
  */
-package org.example.synergy.model;
+package org.example.synergy.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
