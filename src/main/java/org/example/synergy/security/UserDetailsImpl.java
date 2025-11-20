@@ -28,7 +28,7 @@ public class UserDetailsImpl implements UserDetails {
     private final String code;
     
     private final String username;
-    
+
     private final String password;
     
     private final String email;
@@ -54,7 +54,7 @@ public class UserDetailsImpl implements UserDetails {
     public UserDetailsImpl(User user) {
         this.id = user.getId();
         this.code = user.getCode();
-        this.username = user.getUsername();
+        this.username = user.getUserCode();
         this.password = user.getPassword();
         this.email = user.getEmail();
         this.fullName = user.getFullName();

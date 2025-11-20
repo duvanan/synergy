@@ -37,26 +37,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     
     @Override
     public UserDetails loadUserByUsername(final String login) {
-        Optional<User> userOptional = userRepository.findByDeletedIsFalseAndUsername(login);
+        Optional<User> userOptional = userRepository.findByIsDeletedIsFalseAndUserCode(login);
         
         if (userOptional.isEmpty()) {
             log.error("User not found with username: {}", login);
             throw new UsernameNotFoundException("User not found with username: " + login);
         }
-        
         User user = userOptional.get();
         if (BooleanUtils.isFalse(user.getStatus())) {
             throw new UserNotActivatedException("User not active with username: " + login);
         }
-        
-        if (user.getFailedPasswordAttempts() != null
-                && user.getFailedPasswordAttempts() >= (Constants.MAX_FAILED_PASSWORD_ATTEMPTS - 1)) {
-            userRepository.incrementFailedAttemptsAndDeactivateIfNeeded(user.getUsername());
-            
-            log.warn("User account is locked due to too many failed password attempts: {}", login);
-            throw new UserAccountLockedException("User account locked due to too many failed login attempts: " + login);
-        }
-        
         return new UserDetailsImpl(user);
     }
 }

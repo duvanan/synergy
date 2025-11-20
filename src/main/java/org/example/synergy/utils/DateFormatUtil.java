@@ -6,7 +6,7 @@
  * Unauthorized use, disclosure, reproduction, or distribution is strictly prohibited and may be unlawful.
  * Permission for any use must be obtained in writing from RFIAS.
  */
-package org.example.synergy.util;
+package org.example.synergy.utils;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;

@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 import org.example.synergy.contants.Constants;
 import org.example.synergy.contants.JwtConstants;
-import org.example.synergy.util.ObjectMapperUtil;
+import org.example.synergy.utils.ObjectMapperUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

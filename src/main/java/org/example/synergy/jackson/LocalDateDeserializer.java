@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import org.example.synergy.util.DateFormatUtil;
+import org.example.synergy.utils.DateFormatUtil;
 
 /**
  * LocalTimeDeserializer (format "HH:mm:ss")

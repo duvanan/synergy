@@ -24,7 +24,7 @@ import org.example.synergy.security.UserDetailsImpl;
 import org.example.synergy.security.jwt.JwtTokenProvider;
 import org.example.synergy.security.jwt.RefreshTokenProvider;
 import org.example.synergy.service.AuthenticationService;
-import org.example.synergy.util.UuidGenerator;
+import org.example.synergy.utils.UuidGenerator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

@@ -32,9 +32,7 @@ public final class Constants {
     public static final String DEV_PROFILE = "dev";
     
     public static final String PROD_PROFILE = "prod";
-    
-    public static final String RFIAS_REDISSON = "rfias_redisson";
-    
+
     public static final String RFIAS_APP_NAME = "rfias";
     
     public static String DEFAULT_TIME_ZONE = "Asia/Ho_Chi_Minh";

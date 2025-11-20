@@ -50,9 +50,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             if (passwordEncoder.matches(password, userDetails.getPassword())) {
                 return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
             } else {
-                userRepository.incrementFailedAttemptsAndDeactivateIfNeeded(username);
-
-
                 throw exp.translateWithErrorKey(UnauthorizedException::new, "auth.bad_credentials",
                         ErrorKeyConstants.Auth.BAD_CREDENTIALS);
             }

@@ -15,8 +15,8 @@ import java.time.format.DateTimeFormatter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import org.example.synergy.util.DateFormatUtil;
-import org.example.synergy.util.TimeZoneUtil;
+import org.example.synergy.utils.DateFormatUtil;
+import org.example.synergy.utils.TimeZoneUtil;
 
 /**
  * LocalTimeSerializer (format "HH:mm:ss")

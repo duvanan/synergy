@@ -1,10 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mariadb://localhost:3307/synergy_db
+    url: jdbc:mariadb://localhost:3307/rfias?useLegacyDatetimeCode=false
     username: root
-    password: rootpassword
+    password: Admin123456@
     driver-class-name: org.mariadb.jdbc.Driver
-
   jpa:
     hibernate:
       ddl-auto: none
@@ -13,7 +12,6 @@ spring:
       hibernate:
         format_sql: true
     database-platform: org.hibernate.dialect.MariaDBDialect
-
 application:
   security:
     authentication:
@@ -21,4 +19,8 @@ application:
         secret-key: ${SECURITY_AUTHENTICATION_JWT_SECRET_KEY:NjhiMzgzOTU2ZGU3NDZmYTJlMzM5ZTc2NjcxZTVmNmRhMjhkOTkwNjFiYzk4NmNiMmQ1ZWVjMjI1MDY5ODAwYjMxYmQwMjJhNjU4NjYyZjdhODI3YTk0MWRjZDNiZjk2YzcwYzhhZWYwOTM1YjEzYmI2OGRjMjYyYTdmM2NiODE=}
         expiration: ${SECURITY_AUTHENTICATION_JWT_EXPIRATION:86400000}
         refresh-token-expiration: ${SECURITY_AUTHENTICATION_JWT_REFRESH_TOKEN_EXPIRATION:604800000}
+
+server:
+  port: 8083
+  address: 0.0.0.0
 
