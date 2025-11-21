@@ -66,24 +66,30 @@ public class WorkflowConfigServiceImpl implements WorkflowConfigService {
         return stepRepo.findByWorkflowConfigId(configId);
     }
 
+    // ------------------------------
+    // NEW saveSteps() MATCH UI NEW
+    // ------------------------------
+
     private void saveSteps(WorkflowConfig config, List<WorkflowStepRequest> requests) {
         if (requests == null || requests.isEmpty()) return;
 
         List<WorkflowStep> steps = requests.stream().map(r -> {
             WorkflowStep s = new WorkflowStep();
             s.setWorkflowConfig(config);
-            s.setStepNumber(r.getStepNumber());
-            s.setLabel(r.getLabel());
-            s.setStepType(r.getStepType());
-            s.setMinValue(r.getMinValue());
-            s.setMaxValue(r.getMaxValue());
-            s.setUnit(r.getUnit());
-            s.setTooltip(r.getTooltip());
+
+            // --- fields theo UI mới ---
+            s.setParentStep(r.getParentStep());
+            s.setChildStep(r.getChildStep());
+            s.setDepartmentId(r.getDepartmentId());
+            s.setPic(r.getPic());
+            s.setIsLeadUnit(r.getIsLeadUnit());
+
             s.setStepMaxSla(r.getStepMaxSla());
             s.setStepWarningSla(r.getStepWarningSla());
             s.setStepWarningPerson(r.getStepWarningPerson());
-            s.setDepartmentId(r.getDepartmentId());
-            s.setPic(r.getPic());
+
+            s.setTooltip(r.getTooltip());
+
             return s;
         }).toList();
 

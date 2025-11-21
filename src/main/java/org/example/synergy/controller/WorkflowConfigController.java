@@ -52,7 +52,7 @@ public class WorkflowConfigController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page == 0 ? page : page - 1, size);
         return service.filterWorkflowConfigs(name, documentTypeId, maxSla, pageable);
     }
 }

@@ -13,5 +13,5 @@ public class AppraisalUser {
     private Integer level;
     private String organization;
     private String role;
-    private String hostUnit;
+    private Boolean hostUnit;
 }

@@ -37,11 +37,9 @@ import java.time.Instant;
     @ConstructorResult(targetClass = UserListDTO.class, columns = {
         @ColumnResult(name = "id", type = Long.class),
         @ColumnResult(name = "full_name", type = String.class),
-        @ColumnResult(name = "userCode", type = String.class),
+        @ColumnResult(name = "user_code", type = String.class),
         @ColumnResult(name = "email", type = String.class),
         @ColumnResult(name = "phone_number", type = String.class),
-        @ColumnResult(name = "job_title_id", type = Long.class),
-        @ColumnResult(name = "job_title_name", type = String.class),
         @ColumnResult(name = "department_id", type = Long.class),
         @ColumnResult(name = "department_name", type = String.class),
         @ColumnResult(name = "region_code", type = String.class),
@@ -77,9 +75,6 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
-
-    @Column(name = "job_title_id")
-    private Long jobTitleId;
 
     @Column(name = "department_id")
     private Long departmentId;

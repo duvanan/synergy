@@ -35,10 +35,6 @@ public class UserSearch extends BaseSearch implements Serializable {
     @JsonProperty("department_ids")
     private List<Long> departmentIds;
     
-    @Schema(description = "Job title ids", example = "[1,2,3]")
-    @JsonProperty("job_title_ids")
-    private List<Long> jobTitleIds;
-    
     @Schema(description = "User types", example = "[1,2,3]")
     @JsonProperty("user_types")
     private List<Integer> userTypes;

@@ -1,23 +1,28 @@
+-- XÓA BẢNG NẾU TỒN TẠI
+DROP TABLE IF EXISTS workflow_step;
+
+-- TẠO BẢNG MỚI THEO ENTITY MỚI
 CREATE TABLE workflow_step (
-                               id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT 'ID tự sinh của bước',
+                               id BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-                               workflow_config_id BIGINT COMMENT 'ID của workflow config liên kết',
+                               workflow_config_id BIGINT NOT NULL,
 
-                               step_number INT COMMENT 'Số bước (1, 2, 3,...)',
-                               label VARCHAR(255) COMMENT 'Tên hiển thị của bước',
-                               step_type VARCHAR(100) COMMENT 'Loại bước (Tất cả phê duyệt / Chỉ cần 1 người phê duyệt)',
+                               parent_step INT NULL,     -- Bước cha: 1,2,3...
+                               child_step INT NULL,      -- Bước con: 1,2,3...
 
-                               min_value DOUBLE COMMENT 'Giá trị nhỏ nhất (nếu có)',
-                               max_value DOUBLE COMMENT 'Giá trị lớn nhất (nếu có)',
-                               unit VARCHAR(50) COMMENT 'Đơn vị (VD: %, ngày,...)',
-                               tooltip VARCHAR(500) COMMENT 'Gợi ý hướng dẫn người dùng',
+                               department_id VARCHAR(50) NULL,   -- Mã phòng ban thẩm định
+                               pic VARCHAR(50) NULL,             -- Nhân sự thẩm định
 
-                               step_max_sla INT COMMENT 'Tiêu chuẩn thời gian thẩm định (ngày)',
-                               step_warning_sla INT COMMENT 'Cảnh báo trước (ngày)',
-                               step_warning_person VARCHAR(500) COMMENT 'Danh sách nhân viên cảnh báo',
+                               is_lead_unit TINYINT(1) DEFAULT 0, -- Đơn vị chủ trì (boolean)
 
-                               department_id VARCHAR(50) COMMENT 'Mã phòng ban',
-                               pic VARCHAR(50) COMMENT 'Mã nhân viên phụ trách'
+                               step_max_sla INT NULL,        -- Giới hạn thời gian
+                               step_warning_sla INT NULL,    -- Cảnh báo trước
+                               step_warning_person VARCHAR(255) NULL, -- Người nhận cảnh báo
 
+                               tooltip VARCHAR(500) NULL,     -- Gợi ý hướng dẫn
 
-) COMMENT='Bảng lưu thông tin các bước của workflow';
+                               CONSTRAINT fk_workflow_step_config
+                                   FOREIGN KEY (workflow_config_id)
+                                       REFERENCES workflow_config(id)
+                                       ON DELETE CASCADE
+);

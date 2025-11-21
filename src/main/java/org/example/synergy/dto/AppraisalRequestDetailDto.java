@@ -18,6 +18,7 @@ public class AppraisalRequestDetailDto {
     private String note;
     private String status;
     private String createdBy;
+    private String updatedBy;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<FieldValueDto> dynamicFields;

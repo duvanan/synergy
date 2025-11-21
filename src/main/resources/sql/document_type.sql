@@ -3,7 +3,8 @@ CREATE TABLE document_type (
                                name VARCHAR(255)  COMMENT 'Tên loại văn bản',
                                code VARCHAR(100)   COMMENT 'Mã loại văn bản',
                                description TEXT NULL COMMENT 'Mô tả loại văn bản',
-                               template_file_path VARCHAR(500) NULL COMMENT 'Tên hoặc đường dẫn file biểu mẫu',
+                               template_file_path VARCHAR(500) NULL COMMENT ' đường dẫn file biểu mẫu',
+                               file_name VARCHAR(500) NULL COMMENT 'Tên hoặc đường dẫn file biểu mẫu',
     -- Thông tin audit kế thừa từ BaseAuthorEntity
                                is_deleted BOOLEAN DEFAULT FALSE COMMENT 'Đã xóa logic hay chưa',
                                created_by VARCHAR(100) NULL COMMENT 'Người tạo',

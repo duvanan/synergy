@@ -8,5 +8,8 @@ CREATE TABLE appraisal_user (
                                 organization VARCHAR(255) COMMENT 'Đơn vị',
                                 role VARCHAR(200) COMMENT 'Chức vụ',
                                 appraised TINYINT COMMENT 'Đã thẩm định hay chưa',
-                                host_unit VARCHAR(255) COMMENT 'Đơn vị chủ trì'
+                                file_name VARCHAR(255) COMMENT 'Tên file nhận xét',
+                                file_path VARCHAR(255) COMMENT 'path file',
+                                note VARCHAR(255) COMMENT 'nhận xét',
+                                host_unit TINYINT COMMENT 'Đơn vị chủ trì'
 ) COMMENT='Bảng lưu thông tin người thẩm định (AppraisalUser)';

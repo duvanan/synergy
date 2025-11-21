@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class DocumentTypeAttributeRequest {
+    private Long id; // thêm trường này
     private String label;
     private String fieldCode;
     private Boolean required;

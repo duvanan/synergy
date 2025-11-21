@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService {
                 .collate(Constants.UTF8MB4_UNICODE_520_CI)
                 .status(search.getStatus())
                 .departmentIds(search.getDepartmentIds())
-                .jobTitleIds(search.getJobTitleIds())
                 .userTypes(search.getUserTypes())
                 .regionCodes(search.getRegionCodes())
                 .paginationInfo(new PaginationInfo(search.getPageNumber(), search.getPageSize()))
@@ -45,7 +44,6 @@ public class UserServiceImpl implements UserService {
                 .collate(Constants.UTF8MB4_UNICODE_520_CI)
                 .status(search.getStatus())
                 .departmentIds(search.getDepartmentIds())
-                .jobTitleIds(search.getJobTitleIds())
                 .userTypes(search.getUserTypes())
                 .regionCodes(search.getRegionCodes())
                 .build();

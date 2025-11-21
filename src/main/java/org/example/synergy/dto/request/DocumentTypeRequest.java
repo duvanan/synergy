@@ -10,5 +10,6 @@ public class DocumentTypeRequest {
     private String code;
     private String description;
     private String templateFilePath; // hoặc upload sau
+    private String fileName; // hoặc upload sau
     private List<DocumentTypeAttributeRequest> attributes;
 }

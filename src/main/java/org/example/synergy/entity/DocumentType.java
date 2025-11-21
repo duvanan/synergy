@@ -23,6 +23,10 @@ public class DocumentType extends BaseAuthorEntity{
     /** Đường dẫn file biểu mẫu lưu trên MinIO hoặc local */
     private String templateFilePath;
 
+
+    /** Đường dẫn file biểu mẫu lưu trên MinIO hoặc local */
+    private String fileName;
+
     @OneToMany(mappedBy = "documentType", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocumentTypeAttribute> attributes;
 }

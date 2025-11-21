@@ -2,6 +2,7 @@ package org.example.synergy.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.synergy.dto.request.PartnerRequest;
+import org.example.synergy.dto.response.PartnerDetailResponse;
 import org.example.synergy.entity.Partner;
 import org.example.synergy.entity.PartnerRelation;
 import org.example.synergy.service.PartnerService;
@@ -24,8 +25,8 @@ public class PartnerController {
     }
 
     @GetMapping("/{id}")
-    public Partner getById(@PathVariable Long id) {
-        return partnerService.findById(id);
+    public PartnerDetailResponse getById(@PathVariable Long id) {
+        return partnerService.getPartnerDetail(id);
     }
 
     @GetMapping("/{id}/relations")

@@ -35,7 +35,18 @@ public class AppraisalUserEntity {
 
     private Boolean appraised;
 
+    private LocalDateTime appraisedTime;
+
+    private String filePath;
+
+    private String fileName;
+
+    private String note;
+
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
+
     @Column(name = "host_unit")
-    private String hostUnit;
+    private Boolean hostUnit;
 
 }

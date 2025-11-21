@@ -3,6 +3,7 @@ package org.example.synergy.service.impl;
 
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.example.synergy.dto.request.DocumentTypeAttributeRequest;
 import org.example.synergy.dto.request.DocumentTypeRequest;
 import org.example.synergy.dto.response.DocumentTypeAttributeResponse;
 import org.example.synergy.dto.response.DocumentTypeResponse;
@@ -37,11 +38,64 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
 
     @Override
     public DocumentTypeResponse update(Long id, DocumentTypeRequest request) {
-        DocumentType existing = repository.findById(id)
+        DocumentType entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy loại văn bản ID = " + id));
-        DocumentType updated = mapToEntity(request, existing);
-        return mapToResponse(repository.save(updated));
+
+        entity.setName(request.getName());
+        entity.setCode(request.getCode());
+        entity.setDescription(request.getDescription());
+        entity.setTemplateFilePath(request.getTemplateFilePath());
+        entity.setFileName(request.getFileName());
+
+        if (request.getAttributes() != null) {
+            List<DocumentTypeAttribute> existingAttrs = entity.getAttributes();
+
+            // 1. Xóa attributes không còn trong request
+            existingAttrs.removeIf(oldAttr ->
+                    request.getAttributes().stream()
+                            .noneMatch(r -> r.getId() != null && r.getId().equals(oldAttr.getId()))
+            );
+
+            // 2. Cập nhật hoặc thêm mới
+            for (DocumentTypeAttributeRequest attrReq : request.getAttributes()) {
+                if (attrReq.getId() == null) {
+                    // Thêm mới
+                    DocumentTypeAttribute newAttr = new DocumentTypeAttribute();
+                    newAttr.setDocumentType(entity);
+                    newAttr.setLabel(attrReq.getLabel());
+                    newAttr.setFieldCode(attrReq.getFieldCode());
+                    newAttr.setRequired(attrReq.getRequired());
+                    newAttr.setDataType(attrReq.getDataType());
+                    newAttr.setDefaultValue(attrReq.getDefaultValue());
+                    newAttr.setMinValue(attrReq.getMinValue());
+                    newAttr.setMaxValue(attrReq.getMaxValue());
+                    newAttr.setUnitList(attrReq.getUnitList());
+                    newAttr.setTooltip(attrReq.getTooltip());
+                    newAttr.setValueList(attrReq.getValueList());
+                    existingAttrs.add(newAttr);
+                } else {
+                    // Cập nhật attribute cũ
+                    DocumentTypeAttribute existingAttr = existingAttrs.stream()
+                            .filter(e -> e.getId().equals(attrReq.getId()))
+                            .findFirst()
+                            .orElseThrow();
+                    existingAttr.setLabel(attrReq.getLabel());
+                    existingAttr.setFieldCode(attrReq.getFieldCode());
+                    existingAttr.setRequired(attrReq.getRequired());
+                    existingAttr.setDataType(attrReq.getDataType());
+                    existingAttr.setDefaultValue(attrReq.getDefaultValue());
+                    existingAttr.setMinValue(attrReq.getMinValue());
+                    existingAttr.setMaxValue(attrReq.getMaxValue());
+                    existingAttr.setUnitList(attrReq.getUnitList());
+                    existingAttr.setTooltip(attrReq.getTooltip());
+                    existingAttr.setValueList(attrReq.getValueList());
+                }
+            }
+        }
+
+        return mapToResponse(repository.save(entity));
     }
+
 
     @Override
     public void delete(Long id) {
@@ -88,6 +142,59 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
                 .collect(Collectors.toList());
     }
 
+    private void updateEntity(DocumentType entity, DocumentTypeRequest request) {
+        entity.setName(request.getName());
+        entity.setCode(request.getCode());
+        entity.setDescription(request.getDescription());
+        entity.setTemplateFilePath(request.getTemplateFilePath());
+
+        if (request.getAttributes() != null) {
+            List<DocumentTypeAttribute> oldAttrs = entity.getAttributes();
+
+            // 1. Xóa attr không còn trong request
+            oldAttrs.removeIf(old ->
+                    request.getAttributes().stream().noneMatch(r -> r.getId() != null && r.getId().equals(old.getId()))
+            );
+
+            // 2. Cập nhật hoặc thêm mới
+            for (var a : request.getAttributes()) {
+                if (a.getId() == null) {
+                    // Thêm mới
+                    DocumentTypeAttribute newAttr = new DocumentTypeAttribute();
+                    newAttr.setDocumentType(entity);
+                    newAttr.setLabel(a.getLabel());
+                    newAttr.setFieldCode(a.getFieldCode());
+                    newAttr.setRequired(a.getRequired());
+                    newAttr.setDataType(a.getDataType());
+                    newAttr.setDefaultValue(a.getDefaultValue());
+                    newAttr.setMinValue(a.getMinValue());
+                    newAttr.setMaxValue(a.getMaxValue());
+                    newAttr.setUnitList(a.getUnitList());
+                    newAttr.setTooltip(a.getTooltip());
+                    newAttr.setValueList(a.getValueList());
+                    oldAttrs.add(newAttr);
+                } else {
+                    // Cập nhật
+                    DocumentTypeAttribute existingAttr = oldAttrs.stream()
+                            .filter(e -> e.getId().equals(a.getId()))
+                            .findFirst()
+                            .orElseThrow();
+                    existingAttr.setLabel(a.getLabel());
+                    existingAttr.setFieldCode(a.getFieldCode());
+                    existingAttr.setRequired(a.getRequired());
+                    existingAttr.setDataType(a.getDataType());
+                    existingAttr.setDefaultValue(a.getDefaultValue());
+                    existingAttr.setMinValue(a.getMinValue());
+                    existingAttr.setMaxValue(a.getMaxValue());
+                    existingAttr.setUnitList(a.getUnitList());
+                    existingAttr.setTooltip(a.getTooltip());
+                    existingAttr.setValueList(a.getValueList());
+                }
+            }
+        }
+    }
+
+
 
     // ======================= MAPPING =======================
 
@@ -97,6 +204,7 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
         entity.setCode(request.getCode());
         entity.setDescription(request.getDescription());
         entity.setTemplateFilePath(request.getTemplateFilePath());
+        entity.setFileName(request.getFileName());
 
         if (request.getAttributes() != null) {
             List<DocumentTypeAttribute> attrs = request.getAttributes().stream().map(a -> {
@@ -127,6 +235,11 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
         dto.setCode(entity.getCode());
         dto.setDescription(entity.getDescription());
         dto.setTemplateFilePath(entity.getTemplateFilePath());
+        dto.setFileName(entity.getTemplateFilePath());
+        dto.setCreatedAt(entity.getCreatedDate());
+        dto.setCreatedBy(entity.getCreatedBY());
+        dto.setUpdatedAt(entity.getUpdatedDate());
+        dto.setUpdatedBy(entity.getUpdatedUser());
 
         if (entity.getAttributes() != null) {
             dto.setAttributes(entity.getAttributes().stream().map(attr -> {

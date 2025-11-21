@@ -9,4 +9,8 @@ import java.util.List;
 @Repository
 public interface AppraisalRequestFileRepository extends JpaRepository<AppraisalRequestFile, Long> {
     List<AppraisalRequestFile> findByAppraisalRequestId(Long appraisalRequestId);
+
+    List<AppraisalRequestFile> findByAppraisalRequestIdIn(List<Long> requestIds);
+    void deleteByAppraisalRequestIdAndType(Long appraisalRequestId, Integer type);
+
 }

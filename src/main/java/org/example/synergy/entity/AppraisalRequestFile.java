@@ -31,6 +31,9 @@ public class AppraisalRequestFile {
     @Column(name = "file_type", length = 50)
     private String fileType;
 
+    @Column(name = "type")
+    private Integer type;
+
     @Column(name = "uploaded_at")
     private LocalDateTime uploadedAt;
 }

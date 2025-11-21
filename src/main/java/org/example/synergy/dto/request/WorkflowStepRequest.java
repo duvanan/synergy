@@ -1,22 +1,23 @@
 package org.example.synergy.dto.request;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class WorkflowStepRequest {
-    private Integer stepNumber;
-    private String label;
-    private String stepType;
-    private Double minValue;
-    private Double maxValue;
-    private String unit;
-    private String tooltip;
 
-    // SLA riêng cho bước
+    private Integer parentStep;
+    private Integer childStep;
+
+    private String departmentId;
+    private String pic;
+
+    private Boolean isLeadUnit;
+
     private Integer stepMaxSla;
     private Integer stepWarningSla;
     private String stepWarningPerson;
 
-    private String departmentId;
-    private String pic;
+    private String tooltip;
 }

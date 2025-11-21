@@ -3,16 +3,21 @@ package org.example.synergy.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.example.synergy.contants.AppraisalRequestStatus;
 import org.example.synergy.dto.*;
+import org.example.synergy.dto.response.AppraisalUserResponseDto;
 import org.example.synergy.entity.*;
 import org.example.synergy.exceptions.ResourceNotFoundException;
 import org.example.synergy.repository.*;
 import org.example.synergy.service.AppraisalService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,22 +38,57 @@ public class AppraisalServiceImpl implements AppraisalService {
     @Override
     @Transactional
     public AppraisalRequestDetailDto saveDraft(CreateAppraisalRequestDto dto) {
-        AppraisalRequest entity = buildRequestEntityFromDto(dto, AppraisalRequestStatus.DRAFT.getCode());
-        AppraisalRequest saved = requestRepository.save(entity);
 
-        saveFieldValues(saved.getId(), dto.getDynamicFields());
-        saveFiles(saved.getId(), dto.getFiles());
-        saveAppraisalUser(saved.getId(), dto.getAppraisalUsers());
+        AppraisalRequest entity;
 
+        // ========== CASE UPDATE ==========
+        if (dto.getAppraisalRequestId() != null) {
+
+            entity = requestRepository.findById(dto.getAppraisalRequestId())
+                    .orElseThrow(() -> new RuntimeException("Request not found"));
+
+            // update basic fields
+            entity.setDocumentTypeId(dto.getDocumentTypeId());
+            entity.setPriorityLevel(dto.getPriorityLevel());
+            entity.setResponseDeadline(dto.getResponseDeadline());
+            entity.setNote(dto.getNote());
+            entity.setStatus(AppraisalRequestStatus.DRAFT.getCode());
+
+            requestRepository.save(entity);
+
+            // delete dynamic data
+            fieldValueRepository.deleteByAppraisalRequestId(entity.getId());
+            fileRepository.deleteByAppraisalRequestIdAndType(entity.getId(), 1);
+
+            // NOTE: appraisalUser không xoá cứng ở đây.
+            // Toàn bộ logic update được xử lý trong saveAppraisalUser().
+
+        } else {
+            // ========== CASE CREATE NEW ==========
+            entity = buildRequestEntityFromDto(dto, AppraisalRequestStatus.DRAFT.getCode());
+            entity = requestRepository.save(entity);
+        }
+
+        Long requestId = entity.getId();
+
+        // Insert lại fieldValues + files
+        saveFieldValues(requestId, dto.getDynamicFields());
+        saveFiles(requestId, dto.getFiles(), 1);
+
+        // Update / Insert / Soft delete appraisalUser
+        saveAppraisalUser(requestId, dto.getAppraisalUsers());
+
+        // Save history
         historyRepository.save(AppraisalRequestHistory.builder()
-                .appraisalRequestId(saved.getId())
+                .appraisalRequestId(requestId)
                 .action(AppraisalRequestStatus.DRAFT.getCode())
                 .actionBy(dto.getCreatedBy())
-                .comment("Lưu nháp")
+                .comment(dto.getAppraisalRequestId() == null ? "Lưu nháp (tạo mới)" : "Lưu nháp (cập nhật)")
                 .createdAt(LocalDateTime.now())
-                .build());
+                .build()
+        );
 
-        return toDetailDto(saved.getId());
+        return toDetailDto(requestId);
     }
 
     @Override
@@ -60,7 +100,7 @@ public class AppraisalServiceImpl implements AppraisalService {
             saved = requestRepository.save(entity);
 
             saveFieldValues(saved.getId(), dto.getDynamicFields());
-            saveFiles(saved.getId(), dto.getFiles());
+            saveFiles(saved.getId(), dto.getFiles(), 1);
             saveAppraisalUser(saved.getId(), dto.getAppraisalUsers());
         } else {
             saved = requestRepository.findById(dto.getAppraisalRequestId())
@@ -91,6 +131,15 @@ public class AppraisalServiceImpl implements AppraisalService {
         req.setUpdatedDate(LocalDateTime.now());
         requestRepository.save(req);
 
+
+        AppraisalUserEntity appraisalUserEntity = appraisalUserRepository.findByCodeAndAndAppraisalRequestId(dto.getActionBy(), id).orElseThrow(() -> new RuntimeException(""));
+        appraisalUserEntity.setFileName(dto.getFileName());
+        appraisalUserEntity.setFilePath(dto.getFilePath());
+        appraisalUserEntity.setNote(dto.getComment());
+        appraisalUserEntity.setAppraised(Boolean.TRUE);
+        appraisalUserEntity.setAppraisedTime(LocalDateTime.now());
+        appraisalUserRepository.save(appraisalUserEntity);
+
         historyRepository.save(AppraisalRequestHistory.builder()
                 .appraisalRequestId(id)
                 .action(AppraisalRequestStatus.APPROVED.getCode())
@@ -110,6 +159,12 @@ public class AppraisalServiceImpl implements AppraisalService {
         req.setStatus(AppraisalRequestStatus.REJECTED.getCode());
         req.setUpdatedDate(LocalDateTime.now());
         requestRepository.save(req);
+
+        AppraisalUserEntity appraisalUserEntity = appraisalUserRepository.findByCodeAndAndAppraisalRequestId(dto.getActionBy(), id).orElseThrow(() -> new RuntimeException(""));
+        appraisalUserEntity.setFileName(dto.getFileName());
+        appraisalUserEntity.setFilePath(dto.getFilePath());
+        appraisalUserEntity.setNote(dto.getComment());
+        appraisalUserRepository.save(appraisalUserEntity);
 
         historyRepository.save(AppraisalRequestHistory.builder()
                 .appraisalRequestId(id)
@@ -164,7 +219,7 @@ public class AppraisalServiceImpl implements AppraisalService {
         fieldValueRepository.saveAll(ents);
     }
 
-    private void saveFiles(Long requestId, List<FileDto> files) {
+    private void saveFiles(Long requestId, List<FileDto> files, Integer type) {
         if (files == null || files.isEmpty()) return;
         List<AppraisalRequestFile> ents = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now();
@@ -174,28 +229,63 @@ public class AppraisalServiceImpl implements AppraisalService {
                     .fileName(f.getFileName())
                     .filePath(f.getFilePath())
                     .fileType(f.getFileType())
+                    .type(type)
                     .uploadedAt(now)
                     .build());
         }
         fileRepository.saveAll(ents);
     }
 
-    private void saveAppraisalUser(Long requestId, List<AppraisalUser> appraisalUsers) {
-        if (appraisalUsers == null || appraisalUsers.isEmpty()) return;
-        List<AppraisalUserEntity> ents = new ArrayList<>();
-        for (AppraisalUser f : appraisalUsers) {
-            ents.add(AppraisalUserEntity.builder()
-                    .appraisalRequestId(requestId)
-                    .name(f.getName())
-                    .code(f.getCode())
-                    .level(f.getLevel())
-                    .organization(f.getOrganization())
-                    .role(f.getRole())
-                    .hostUnit(f.getHostUnit())
-                    .build());
+    private void saveAppraisalUser(Long requestId, List<AppraisalUser> dtoUsers) {
+        // Lấy danh sách user hiện tại trong DB
+        List<AppraisalUserEntity> existingUsers =
+                appraisalUserRepository.findAllByAppraisalRequestId(requestId);
+
+        // Map để dễ lookup
+        Map<String, AppraisalUserEntity> existingMap = existingUsers.stream()
+                .collect(Collectors.toMap(AppraisalUserEntity::getCode, u -> u));
+
+        List<AppraisalUserEntity> result = new ArrayList<>();
+
+        for (AppraisalUser dto : dtoUsers) {
+
+            // Nếu user đã tồn tại → update
+            if (existingMap.containsKey(dto.getCode())) {
+                AppraisalUserEntity ent = existingMap.get(dto.getCode());
+                ent.setName(dto.getName());
+                ent.setLevel(dto.getLevel());
+                ent.setOrganization(dto.getOrganization());
+                ent.setRole(dto.getRole());
+                ent.setHostUnit(dto.getHostUnit());
+                ent.setIsDeleted(false); // revive nếu trước đó đã bị đánh dấu delete
+                result.add(ent);
+
+                existingMap.remove(dto.getCode()); // đánh dấu là đã xử lý
+            } else {
+                // User mới → insert
+                result.add(AppraisalUserEntity.builder()
+                        .appraisalRequestId(requestId)
+                        .code(dto.getCode())
+                        .name(dto.getName())
+                        .level(dto.getLevel())
+                        .organization(dto.getOrganization())
+                        .role(dto.getRole())
+                        .hostUnit(dto.getHostUnit())
+                        .isDeleted(false)
+                        .build()
+                );
+            }
         }
-        appraisalUserRepository.saveAll(ents);
+
+        // Những user còn lại trong existingMap là user không còn trong DTO → soft delete
+        for (AppraisalUserEntity toDelete : existingMap.values()) {
+            toDelete.setIsDeleted(true);
+            result.add(toDelete);
+        }
+
+        appraisalUserRepository.saveAll(result);
     }
+
 
 
     private AppraisalRequestDetailDto toDetailDto(Long requestId) {
@@ -230,7 +320,100 @@ public class AppraisalServiceImpl implements AppraisalService {
                 .note(r.getNote())
                 .status(r.getStatus())
                 .dynamicFields(fields)
+                .createdAt(r.getCreatedDate())
+                .createdBy(r.getCreatedBY())
+                .updatedAt(r.getUpdatedDate())
+                .updatedBy(r.getUpdatedUser())
                 .files(fileDtos)
                 .build();
     }
+
+    public Page<AppraisalRequestDetailDto> searchRequests(
+            String requestCode,
+            Long documentTypeId,
+            String status,
+            Pageable pageable
+    ) {
+        // 1. Query danh sách request theo phân trang
+        Page<AppraisalRequest> page = requestRepository.search(requestCode, documentTypeId, status, pageable);
+
+        List<Long> requestIds = page.getContent().stream()
+                .map(AppraisalRequest::getId)
+                .collect(Collectors.toList());
+
+        // 2. Load dynamic fields theo danh sách requestIds
+        List<AppraisalRequestFieldValue> allFieldValues =
+                fieldValueRepository.findByAppraisalRequestIdIn(requestIds);
+
+        Map<Long, List<FieldValueDto>> fieldMap = allFieldValues.stream()
+                .collect(Collectors.groupingBy(
+                        AppraisalRequestFieldValue::getAppraisalRequestId,
+                        Collectors.mapping(f -> FieldValueDto.builder()
+                                .fieldKey(f.getFieldKey())
+                                .fieldLabel(f.getFieldLabel())
+                                .fieldType(f.getFieldType())
+                                .fieldValue(f.getFieldValue())
+                                .build(), Collectors.toList())
+                ));
+
+        // 3. Load file attachments theo danh sách requestIds
+        List<AppraisalRequestFile> allFiles =
+                fileRepository.findByAppraisalRequestIdIn(requestIds);
+
+        Map<Long, List<FileDto>> fileMap = allFiles.stream()
+                .collect(Collectors.groupingBy(
+                        AppraisalRequestFile::getAppraisalRequestId,
+                        Collectors.mapping(f -> FileDto.builder()
+                                .fileName(f.getFileName())
+                                .filePath(f.getFilePath())
+                                .fileType(f.getFileType())
+                                .build(), Collectors.toList())
+                ));
+
+        // 4. Convert sang DTO tái sử dụng AppraisalRequestDetailDto
+        List<AppraisalRequestDetailDto> dtos = page.getContent().stream()
+                .map(r -> AppraisalRequestDetailDto.builder()
+                        .id(r.getId())
+                        .requestCode(r.getRequestCode())
+                        .documentTypeCode(r.getDocumentTypeId())
+                        .priorityLevel(r.getPriorityLevel())
+                        .responseDeadline(r.getResponseDeadline())
+                        .note(r.getNote())
+                        .status(r.getStatus())
+                        .dynamicFields(fieldMap.getOrDefault(r.getId(), List.of()))
+                        .files(fileMap.getOrDefault(r.getId(), List.of()))
+                        .createdAt(r.getCreatedDate())
+                        .createdBy(r.getCreatedBY())
+                        .updatedAt(r.getUpdatedDate())
+                        .updatedBy(r.getUpdatedUser())
+                        .build()
+                )
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(dtos, pageable, page.getTotalElements());
+    }
+
+    public List<AppraisalUserResponseDto> getUsersByRequestId(Long appraisalRequestId) {
+
+        List<AppraisalUserEntity> entities =
+                appraisalUserRepository.findAllByAppraisalRequestIdAndIsDeleted(appraisalRequestId, Boolean.FALSE);
+
+        return entities.stream()
+                .map(e -> AppraisalUserResponseDto.builder()
+                        .id(e.getId())
+                        .appraisalRequestId(e.getAppraisalRequestId())
+                        .name(e.getName())
+                        .code(e.getCode())
+                        .level(e.getLevel())
+                        .organization(e.getOrganization())
+                        .role(e.getRole())
+                        .appraised(e.getAppraised())
+                        .filePath(e.getFilePath())
+                        .fileName(e.getFileName())
+                        .note(e.getNote())
+                        .hostUnit(e.getHostUnit())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 }
