@@ -6,7 +6,7 @@
  * Unauthorized use, disclosure, reproduction, or distribution is strictly prohibited and may be unlawful.
  * Permission for any use must be obtained in writing from RFIAS.
  */
-package org.example.synergy.model;
+package org.example.synergy.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ColumnResult;
@@ -32,11 +32,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class Department  implements Serializable {
     
-    @Serial
-    private static final long serialVersionUID = 192178532347017224L;
-    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false, updatable = false)
     private Long id;
     
@@ -57,4 +53,20 @@ public class Department  implements Serializable {
     
     @Column(name = "description")
     private String description;
+
+    @Column(name = "organization_name")
+    private String organizationName;
+
+    @Column(name = "organization_code")
+    private String organizationCode;
+
+    @Column(name = "is_deleted")
+    private Integer isDeleted;
+
+    @Column(name = "is_active")
+    private Integer isActive;
+
+    @Column(name = "parent_code")
+    private String parentCode;
+
 }

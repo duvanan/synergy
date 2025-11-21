@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mariadb://localhost:3307/rfias}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:Admin123456@}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.MariaDBDialect
+
+#application:
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          keycloak:
+#            client-id: <Client_ID_do_bên_SSO_cấp>
+#            client-secret: <Client_Secret_nếu_có>
+#            scope: openid,profile,email
+#            authorization-grant-type: authorization_code
+#            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+#        provider:
+#          keycloak:
+#            issuer-uri: https://sso.viettelsoftware.com/realms/VTIT_DEV
+#      resourceserver:
+#        jwt:
+#          issuer-uri: https://sso.viettelsoftware.com/realms/VTIT_DEV
+
+application:
+  security:
+    authentication:
+      jwt:
+        secret-key: ${SECURITY_AUTHENTICATION_JWT_SECRET_KEY:NjhiMzgzOTU2ZGU3NDZmYTJlMzM5ZTc2NjcxZTVmNmRhMjhkOTkwNjFiYzk4NmNiMmQ1ZWVjMjI1MDY5ODAwYjMxYmQwMjJhNjU4NjYyZjdhODI3YTk0MWRjZDNiZjk2YzcwYzhhZWYwOTM1YjEzYmI2OGRjMjYyYTdmM2NiODE=}
+        expiration: ${SECURITY_AUTHENTICATION_JWT_EXPIRATION:86400000}
+        refresh-token-expiration: ${SECURITY_AUTHENTICATION_JWT_REFRESH_TOKEN_EXPIRATION:604800000}
+
+server:
+  port: 8066
+
+

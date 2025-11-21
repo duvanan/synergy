@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@EntityScan("org.example.synergy.model")
+@EntityScan("org.example.synergy.entity")
 @ConfigurationPropertiesScan(basePackages = {
         "org.example.synergy.config",
         "org.example.synergy.configprops"
