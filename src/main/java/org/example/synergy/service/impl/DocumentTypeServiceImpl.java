@@ -118,7 +118,6 @@ public class DocumentTypeServiceImpl implements DocumentTypeService {
     public List<DocumentTypeResponse> filter(String keyword, String code) {
         List<DocumentType> list = repository.findAll((root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
-
             if (keyword != null && !keyword.isEmpty()) {
                 Predicate p1 = cb.like(root.get("name"), "%" + keyword + "%");
                 Predicate p2 = cb.like(root.get("description"), "%" + keyword + "%");
