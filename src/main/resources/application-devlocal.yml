@@ -40,6 +40,6 @@ application:
         refresh-token-expiration: ${SECURITY_AUTHENTICATION_JWT_REFRESH_TOKEN_EXPIRATION:604800000}
 
 server:
-  port: 8066
+  port: 8067
 
 

@@ -27,6 +27,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 
 @Component
 @RequiredArgsConstructor
@@ -47,7 +49,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         try {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             
-            if (passwordEncoder.matches(password, userDetails.getPassword())) {
+            if (Objects.equals(password, userDetails.getPassword())) {
                 return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
             } else {
                 throw exp.translateWithErrorKey(UnauthorizedException::new, "auth.bad_credentials",
