@@ -25,6 +25,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll() // Cho phép truy cập API đăng nhập, đăng ký
                         .requestMatchers("/api/workflows/**").permitAll() // yêu cầu login
                         .requestMatchers("/api/document-types/**").permitAll() // yêu cầu login
+                        .requestMatchers("/api/**").permitAll() // yêu cầu login
                 );
 
         return http.build();

@@ -52,14 +52,6 @@ public class UserDetailResponse extends BaseSuccessResponse implements Serializa
     @JsonProperty("phone_number")
     private String phoneNumber;
     
-    @Schema(description = "Job Title ID", example = "1")
-    @JsonProperty("job_title_id")
-    private Long jobTitleId;
-    
-    @Schema(description = "Job title name", example = "Trưởng phòng")
-    @JsonProperty("job_title_name")
-    private String jobTitleName;
-    
     @Schema(description = "Department ID", example = "1")
     @JsonProperty("department_id")
     private Long departmentId;

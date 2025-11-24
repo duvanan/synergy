@@ -3,12 +3,16 @@ package org.example.synergy.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.synergy.contants.Constants;
+import org.example.synergy.dto.UserDepartmentDTO;
 import org.example.synergy.dto.UserListDTO;
 import org.example.synergy.dto.request.user.UserSearch;
 import org.example.synergy.dto.request.user.UserSearchCondition;
 import org.example.synergy.dto.response.PaginationInfo;
 import org.example.synergy.repository.UserRepository;
 import org.example.synergy.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -28,7 +32,6 @@ public class UserServiceImpl implements UserService {
                 .collate(Constants.UTF8MB4_UNICODE_520_CI)
                 .status(search.getStatus())
                 .departmentIds(search.getDepartmentIds())
-                .jobTitleIds(search.getJobTitleIds())
                 .userTypes(search.getUserTypes())
                 .regionCodes(search.getRegionCodes())
                 .paginationInfo(new PaginationInfo(search.getPageNumber(), search.getPageSize()))
@@ -45,11 +48,32 @@ public class UserServiceImpl implements UserService {
                 .collate(Constants.UTF8MB4_UNICODE_520_CI)
                 .status(search.getStatus())
                 .departmentIds(search.getDepartmentIds())
-                .jobTitleIds(search.getJobTitleIds())
                 .userTypes(search.getUserTypes())
                 .regionCodes(search.getRegionCodes())
                 .build();
 
         return userRepository.countTotalUsers(condition);
     }
+
+
+    public Page<UserDepartmentDTO> filterUsers(
+            String organizationCode,
+            Long departmentId,
+            Boolean status,
+            Integer type,
+            String regionCode,
+            int page,
+            int size
+    ) {
+        Pageable pageable = PageRequest.of(page == 0 ? page : page - 1, size);
+        return userRepository.filterUsers(
+                organizationCode,
+                departmentId,
+                status,
+                type,
+                regionCode,
+                pageable
+        );
+    }
+
 }

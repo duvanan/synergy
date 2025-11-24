@@ -17,26 +17,21 @@ public class WorkflowStep {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "workflow_config_id")
-    @JsonBackReference // tránh vòng lặp khi serialize
+    @JsonBackReference
     private WorkflowConfig workflowConfig;
 
-    private Integer stepNumber; // Số bước (1, 2, 3,...)
+    private Integer parentStep;    // Bước cha: 1, 2, 3...
+    private Integer childStep;     // Bước con: 1, 2, 3...
 
-    private String label;       // Tên hiển thị của bước
+    private Long departmentId;   // Phòng ban thẩm định
+    private String pic;            // Nhân sự thẩm định
 
-    private String stepType;    // Loại bước (Tất cả phê duyệt / Chỉ cần 1 người phê duyệt)
+    private Boolean isLeadUnit;    // Đơn vị chủ trì?
 
-    private Double minValue;    // Giá trị nhỏ nhất (nếu có)
-    private Double maxValue;    // Giá trị lớn nhất (nếu có)
+    // SLA
+    private Integer stepMaxSla;        // Giới hạn thời gian
+    private Integer stepWarningSla;    // Cảnh báo trước
+    private String stepWarningPerson;  // Người nhận cảnh báo
 
-    private String unit;        // Đơn vị (VD: %, ngày,...)
-    private String tooltip;     // Gợi ý hướng dẫn người dùng
-
-    // --- SLA riêng cho bước ---
-    private Integer stepMaxSla;       // Tiêu chuẩn thời gian thẩm định (ngày)
-    private Integer stepWarningSla;   // Cảnh báo trước (ngày)
-    private String stepWarningPerson; // Danh sách nhân viên cảnh báo
-
-    private String departmentId; // Mã phòng ban
-    private String pic;          // Mã nhân viên phụ trách
+    private String tooltip;        // Gợi ý
 }

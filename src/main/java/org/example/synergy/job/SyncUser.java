@@ -63,7 +63,6 @@ public class SyncUser {
                     existingUser.setEmail(user.getEmail());
                     existingUser.setCode(user.getCode());
                     existingUser.setPhoneNumber(user.getPhoneNumber());
-                    existingUser.setJobTitleId(user.getJobTitleId());
                     existingUser.setDepartmentId(user.getDepartmentId());
                     existingUser.setJti(user.getJti());
                     existingUser.setStatus(user.getStatus());
@@ -93,7 +92,7 @@ public class SyncUser {
     }
 
 
-    @Scheduled(fixedRate = 1000)
+//    @Scheduled(fixedRate = 1000)
     @Transactional// runs every hour
     public void syncDepartment() {
         try {

@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @MappedSuperclass
@@ -31,7 +32,7 @@ public abstract class BaseAuthorEntity implements Serializable {
 
     @CreatedDate
     @Column(name = "created_date", updatable = false)
-    private Date createdDate;
+    private LocalDateTime createdDate;
 
     @LastModifiedBy
     @Column(name = "updated_user")
@@ -39,6 +40,6 @@ public abstract class BaseAuthorEntity implements Serializable {
 
     @LastModifiedDate
     @Column(name = "updated_date")
-    private Date updatedDate;
+    private LocalDateTime updatedDate;
 
 }

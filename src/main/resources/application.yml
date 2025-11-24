@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mariadb://10.110.10.16:3306/dbnetpm_project}
-    username: ${SPRING_DATASOURCE_USERNAME:udbnetpm2}
-    password: ${SPRING_DATASOURCE_PASSWORD:Vtit@DB2025}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mariadb://10.110.10.50:3306/hk3}
+    username: ${SPRING_DATASOURCE_USERNAME:uhk3}
+    password: ${SPRING_DATASOURCE_PASSWORD:r6O71xNwSF0gowFf}
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
@@ -38,6 +38,11 @@ application:
 #        secret-key: ${SECURITY_AUTHENTICATION_JWT_SECRET_KEY:NjhiMzgzOTU2ZGU3NDZmYTJlMzM5ZTc2NjcxZTVmNmRhMjhkOTkwNjFiYzk4NmNiMmQ1ZWVjMjI1MDY5ODAwYjMxYmQwMjJhNjU4NjYyZjdhODI3YTk0MWRjZDNiZjk2YzcwYzhhZWYwOTM1YjEzYmI2OGRjMjYyYTdmM2NiODE=}
 #        expiration: ${SECURITY_AUTHENTICATION_JWT_EXPIRATION:86400000}
 #        refresh-token-expiration: ${SECURITY_AUTHENTICATION_JWT_REFRESH_TOKEN_EXPIRATION:604800000}
-
-
+minio:
+  endPoint: https://stg-minio.viettelsoftware.com/
+  accessKey: hk3
+  secretKey: Kf4$Xp1t!M9r
+  bucketName: hk3
+voffice:
+    url:
 

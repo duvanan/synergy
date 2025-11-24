@@ -2,6 +2,8 @@ package org.example.synergy.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.synergy.dto.request.PartnerRequest;
+import org.example.synergy.dto.response.PartnerDetailResponse;
+import org.example.synergy.dto.response.PartnerRelationResponse;
 import org.example.synergy.entity.Partner;
 import org.example.synergy.entity.PartnerRelation;
 import org.example.synergy.repository.PartnerRelationRepository;
@@ -31,10 +33,39 @@ public class PartnerServiceImpl implements PartnerService {
     }
 
     @Override
-    public Partner findById(Long id) {
-        return partnerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Partner not found with id " + id));
+    public PartnerDetailResponse getPartnerDetail(Long id) {
+        Partner partner = partnerRepository.findById(id).orElse(null); // lấy Partner
+        List<PartnerRelation> relations = relationRepository.findByPartnerId(id); // lấy relation
+
+        PartnerDetailResponse response = new PartnerDetailResponse();
+        response.setId(partner.getId());
+        response.setType(partner.getType());
+        response.setName(partner.getName());
+        response.setPartnerType(partner.getPartnerType());
+        response.setTaxCode(partner.getTaxCode());
+        response.setInvoiceAddress(partner.getInvoiceAddress());
+        response.setInvoiceEmail(partner.getInvoiceEmail());
+        response.setLegalRepresentativeName(partner.getLegalRepresentativeName());
+        response.setLegalRepresentativeId(partner.getLegalRepresentativeId());
+        response.setLegalRepresentativeAddress(partner.getLegalRepresentativeAddress());
+        response.setLegalRepresentativePhone(partner.getLegalRepresentativePhone());
+        response.setCccd(partner.getCccd());
+        response.setContactInfo(partner.getContactInfo());
+        response.setConnected(partner.getConnected());
+
+        List<PartnerRelationResponse> relRes = relations.stream().map(r -> {
+            PartnerRelationResponse pr = new PartnerRelationResponse();
+            pr.setId(r.getId());
+            pr.setEmployeeName(r.getEmployeeName());
+            pr.setEmployeeCode(r.getEmployeeCode());
+            pr.setRelationship(r.getRelationship());
+            return pr;
+        }).toList();
+
+        response.setRelatedPersons(relRes);
+        return response;
     }
+
 
     @Override
     @Transactional
@@ -48,7 +79,7 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     @Transactional
     public Partner update(Long id, PartnerRequest req) {
-        Partner existing = findById(id);
+        Partner existing = partnerRepository.findById(id).orElse(null);
         updateEntity(existing, req);
         Partner updated = partnerRepository.save(existing);
 
