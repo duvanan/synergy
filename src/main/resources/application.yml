@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mariadb://localhost:3306/synergy}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:admin}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mariadb://10.110.10.50:3306/hk3}
+    username: ${SPRING_DATASOURCE_USERNAME:uhk3}
+    password: ${SPRING_DATASOURCE_PASSWORD:r6O71xNwSF0gowFf}
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
