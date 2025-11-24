@@ -10,23 +10,24 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    // ✅ Cung cấp bean AuthenticationManager cho AuthenticationServiceImpl
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
-    // ✅ Cấu hình filter chain cơ bản (cho phép tất cả endpoint)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
-                .csrf(csrf -> csrf.disable()) // Tắt CSRF nếu dùng API
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> {}) // bật CORS
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Cho phép truy cập API đăng nhập, đăng ký
-                        .requestMatchers("/api/workflows/**").permitAll() // yêu cầu login
-                        .requestMatchers("/api/document-types/**").permitAll() // yêu cầu login
-                        .requestMatchers("/api/**").permitAll() // yêu cầu login
-                );
+                        .requestMatchers("/api/**").permitAll()   // Cho phép toàn bộ API
+                        .anyRequest().permitAll()
+                )
+                .formLogin(login -> login.disable())  // tắt form login mặc định
+                .httpBasic(basic -> basic.disable())  // tắt basic auth
+                .logout(logout -> logout.disable());  // tắt logout
 
         return http.build();
     }

@@ -47,30 +47,54 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService;
     
     private final ExceptionTranslator exp;
-    
+
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain)
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        String jwt = resolveToken(request);
-        
-        if (StringUtils.isNotBlank(jwt) && this.jwtTokenProvider.validateToken(jwt)) {
+
+        try {
+            String jwt = resolveToken(request);
+
+            if (StringUtils.isBlank(jwt)) {
+                // không có token => bỏ qua xác thực, tiếp tục
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            if (!jwtTokenProvider.validateToken(jwt)) {
+                // không throw, chỉ bỏ qua xác thực
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             String username = jwtTokenProvider.extractUsername(jwt);
             String jti = jwtTokenProvider.extractJti(jwt);
-            
+
+            if (StringUtils.isBlank(username)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            
+
             if (userDetails instanceof UserDetailsImpl userDetail) {
                 if (StringUtils.isBlank(jti) || StringUtils.isBlank(userDetail.getJti())
                         || !userDetail.getJti().equals(jti)) {
-                    throw exp.translateWithErrorKey(UnauthorizedException::new, "auth.bad_credentials",
-                            ErrorKeyConstants.Auth.BAD_CREDENTIALS);
+                    // ở đây quyết định: không throw mà ignore token (dev)
+                    filterChain.doFilter(request, response);
+                    return;
                 }
             }
             
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, jwt, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        } catch (Exception ex) {
+            // Bắt mọi lỗi trong filter — log rồi cho tiếp tục để tránh ném UnauthorizedException không mong muốn
+            SecurityContextHolder.clearContext();
         }
         
         filterChain.doFilter(request, response);
