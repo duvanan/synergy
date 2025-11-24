@@ -27,7 +27,7 @@ public class AppraisalUserEntity {
 
     private String code;
 
-    private Integer level;
+    private Double level;
 
     private String organization;
 

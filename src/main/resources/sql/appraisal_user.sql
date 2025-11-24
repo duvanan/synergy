@@ -11,5 +11,7 @@ CREATE TABLE appraisal_user (
                                 file_name VARCHAR(255) COMMENT 'Tên file nhận xét',
                                 file_path VARCHAR(255) COMMENT 'path file',
                                 note VARCHAR(255) COMMENT 'nhận xét',
-                                host_unit TINYINT COMMENT 'Đơn vị chủ trì'
+                                host_unit TINYINT COMMENT 'Đơn vị chủ trì',
+                                is_deleted TINYINT COMMENT 'xóa',
+                                appraised_time DATETIME COMMENT 'Thời gian duyệt'
 ) COMMENT='Bảng lưu thông tin người thẩm định (AppraisalUser)';

@@ -23,7 +23,7 @@ public class WorkflowStep {
     private Integer parentStep;    // Bước cha: 1, 2, 3...
     private Integer childStep;     // Bước con: 1, 2, 3...
 
-    private String departmentId;   // Phòng ban thẩm định
+    private Long departmentId;   // Phòng ban thẩm định
     private String pic;            // Nhân sự thẩm định
 
     private Boolean isLeadUnit;    // Đơn vị chủ trì?

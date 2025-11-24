@@ -10,7 +10,7 @@ CREATE TABLE workflow_step (
                                parent_step INT NULL,     -- Bước cha: 1,2,3...
                                child_step INT NULL,      -- Bước con: 1,2,3...
 
-                               department_id VARCHAR(50) NULL,   -- Mã phòng ban thẩm định
+                               department_id BIGINT NULL,   -- Mã phòng ban thẩm định
                                pic VARCHAR(50) NULL,             -- Nhân sự thẩm định
 
                                is_lead_unit TINYINT(1) DEFAULT 0, -- Đơn vị chủ trì (boolean)
@@ -19,10 +19,7 @@ CREATE TABLE workflow_step (
                                step_warning_sla INT NULL,    -- Cảnh báo trước
                                step_warning_person VARCHAR(255) NULL, -- Người nhận cảnh báo
 
-                               tooltip VARCHAR(500) NULL,     -- Gợi ý hướng dẫn
+                               tooltip VARCHAR(500) NULL     -- Gợi ý hướng dẫn
 
-                               CONSTRAINT fk_workflow_step_config
-                                   FOREIGN KEY (workflow_config_id)
-                                       REFERENCES workflow_config(id)
-                                       ON DELETE CASCADE
+
 );

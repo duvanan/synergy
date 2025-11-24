@@ -16,7 +16,7 @@ public class AppraisalUserResponseDto {
     private Long appraisalRequestId;
     private String name;
     private String code;
-    private Integer level;
+    private Double level;
     private String organization;
     private String role;
     private Boolean appraised;

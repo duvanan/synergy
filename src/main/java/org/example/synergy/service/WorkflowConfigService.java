@@ -1,6 +1,7 @@
 package org.example.synergy.service;
 
 import org.example.synergy.dto.request.WorkflowConfigRequest;
+import org.example.synergy.dto.response.WorkflowConfigResponse;
 import org.example.synergy.entity.WorkflowConfig;
 import org.example.synergy.entity.WorkflowStep;
 import org.springframework.data.domain.Page;
@@ -16,4 +17,4 @@ public interface WorkflowConfigService {
     void delete(Long id);
     List<WorkflowStep> findSteps(Long configId);
 
-    Page<WorkflowConfig> filterWorkflowConfigs(String name, Long documentTypeId, Integer maxSla, Pageable pageable);}
+    Page<WorkflowConfigResponse> filterWorkflowConfigs(String name, Long documentTypeId, Integer maxSla, Pageable pageable);}

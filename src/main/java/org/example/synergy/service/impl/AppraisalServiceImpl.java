@@ -29,6 +29,8 @@ public class AppraisalServiceImpl implements AppraisalService {
     private final AppraisalRequestFileRepository fileRepository;
     private final AppraisalRequestHistoryRepository historyRepository;
     private final AppraisalUserRepository appraisalUserRepository;
+    private final DepartmentRepository departmentRepo;
+    private final UserRepository userRepo;
 
     // helper generate code
     private String generateRequestCode() {

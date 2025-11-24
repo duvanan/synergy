@@ -2,6 +2,7 @@ package org.example.synergy.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.synergy.dto.request.WorkflowConfigRequest;
+import org.example.synergy.dto.response.WorkflowConfigResponse;
 import org.example.synergy.entity.WorkflowConfig;
 import org.example.synergy.service.WorkflowConfigService;
 import org.springframework.data.domain.Page;
@@ -45,7 +46,7 @@ public class WorkflowConfigController {
 
     // API filter + phân trang
     @GetMapping("/filter")
-    public Page<WorkflowConfig> filter(
+    public Page<WorkflowConfigResponse> filter(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long documentTypeId,
             @RequestParam(required = false) Integer maxSla,

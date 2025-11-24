@@ -96,4 +96,6 @@ public interface UserRepository extends JpaRepository<User, Integer>, UserReposi
             @Param("regionCode") String regionCode,
             Pageable pageable
     );
+
+    Optional<User> findByUserCode(String code);
 }
